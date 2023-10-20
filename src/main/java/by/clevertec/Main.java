@@ -19,6 +19,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Main {
 
@@ -37,14 +38,15 @@ public class Main {
 //        System.out.println("Students whom can go to academy(limit 200): " + task12());
 //        System.out.println("First 500 evacuation people: " + task13());
 //        task14();
-//        System.out.printf("Total cost of maintaining all plants: %.2f%n", task15());
-//        System.out.println("Students younger 18: " + task16());
-//        System.out.println("Unique groups: " + task17());
+//        task15();
+//        task16();
+//        task17();
+
 //        task18();
 //        task19();
-//        task20();
-    //    task21();
-        task22();
+        task20();
+//        task21();
+//        task22();
     }
 
     public static List<Animal> task1() {
@@ -113,7 +115,7 @@ public class Main {
         final String FEMALE = "Female";
         final String MALE = "Male";
         return animals.stream()
-                .anyMatch(a -> !FEMALE.equals(a.getGender()) && !MALE.equals(a.getGender()) );
+                .anyMatch(a -> !FEMALE.equals(a.getGender()) && !MALE.equals(a.getGender()));
     }
 
     public static boolean task7() {
@@ -225,14 +227,15 @@ public class Main {
 //        cars.stream() Продолжить ...
     }
 
-    public static double task15() {
+    public static void task15() {
         System.out.println("Task 15: ");
         List<Flower> flowers = Util.getFlowers();
 
         final double WATER_SERVICE_FOR_5_YEARS = 1.39 * 0.001 * 365 * 5;
         final String GLASS = "Glass", ALUMINUM = "Aluminum", STEEL = "Steel";
 
-        return flowers.stream()
+        System.out.println("Total cost of maintaining all plants: " +
+            flowers.stream()
                 .sorted(Comparator.comparing(Flower::getOrigin).reversed())
                 .sorted(Comparator.comparing(Flower::getPrice).thenComparing(Flower::getWaterConsumptionPerDay).reversed())
                 .filter(flower -> Pattern.compile("^[C-S].*").matcher(flower.getCommonName()).matches())
@@ -243,64 +246,94 @@ public class Main {
                         .collect(Collectors.toList()))
                 .map(flower -> flower.getPrice() + flower.getWaterConsumptionPerDay() * WATER_SERVICE_FOR_5_YEARS)
                 .mapToDouble(f -> f)
-                .sum();
+                .sum());
     }
 
-    public static List<Student> task16() {
-        System.out.println("Task 16: ");
+    public static void task16() {
+        System.out.println("\nTask 16: ");
         List<Student> students = Util.getStudents();
 
         final int CHILDREN_AGE = 18;
-        return students.stream()
-                .filter(s -> s.getAge() < CHILDREN_AGE)
-                .sorted(Comparator.comparing(Student::getSurname))
-                .collect(Collectors.toList());
+
+        System.out.println("Students younger than 18:" +
+                students.stream()
+                        .filter(s -> s.getAge() < CHILDREN_AGE)
+                        .sorted(Comparator.comparing(Student::getSurname))
+                        .toList());
     }
 
-    public static List<String> task17() {
-        System.out.println("Task 17: ");
+    public static void task17() {
+        System.out.println("\nTask 17: ");
         List<Student> students = Util.getStudents();
 
-        return students.stream()
+        System.out.println("Unique groups:");
+        students.stream()
                 .map(Student::getGroup)
                 .distinct()
-                .collect(Collectors.toList());
+                .forEach(System.out::println);
     }
 
     public static void task18() {
-        System.out.println("Task 18: ");
+        System.out.println("\nTask 18: ");
         List<Student> students = Util.getStudents();
 
+        System.out.println("Faculty - middle age:");
         students.stream()
                 .collect(Collectors.groupingBy(Student::getFaculty, Collectors.averagingDouble(Student::getAge)))
                 .forEach((faculty, avgAge) -> System.out.printf("%s : %.2f\n", faculty, avgAge));
     }
 
     public static void task19() {
-        System.out.println("Task 19: ");
+        System.out.println("\nTask 19: ");
         List<Student> students = Util.getStudents();
         List<Examination> examinations = Util.getExaminations();
 
+        final int MARK = 4;
         final String GROUP = "C-2";//[P-1, C-2, M-3, C-4, M-1, C-3, M-2, P-3, P-4, C-1, P-2]
+
+        System.out.println("Students from *group with exam3 > 4: ");
         examinations.stream()
-                .filter(e -> e.getExam3() > 4)
+                .filter(e -> e.getExam3() > MARK)
                 .map(e -> students.stream()
-                                    .filter(s -> e.getStudentId() == s.getId() && GROUP.equals(s.getGroup()))
-                                    .findAny()
-                                    .map(Student::getSurname)
+                        .filter(s -> e.getStudentId() == s.getId() && GROUP.equals(s.getGroup()))
+                        .findAny()
+                        .map(Student::getSurname)
                 )
                 .filter(Optional::isPresent)
+                .map(Optional::get)
                 .forEach(System.out::println);
     }
 
     public static void task20() {
+        System.out.println("\nTask 20: ");
         List<Student> students = Util.getStudents();
         List<Examination> examinations = Util.getExaminations();
-//        students.stream() Продолжить ...
+
+        System.out.println("The faculty with max assessment by exam1: " +
+                students.stream()
+                        .collect(Collectors.groupingBy(Student::getFaculty))
+                        .entrySet()
+                        .stream()
+                        .map(m -> Map.entry(m.getKey(), m.getValue()
+                                        .stream()
+                                        .map(s -> examinations.stream()
+                                                .filter(e -> e.getStudentId() == s.getId())
+                                                .map(Examination::getExam1)
+                                                .findAny()
+                                        )
+                                        .filter(Optional::isPresent)
+                                        .collect(Collectors.summarizingInt(Optional::get))
+                                        .getAverage()
+
+                                )
+                        )
+                        .max((a, b) -> (int) (a.getValue() - b.getValue()))
+                        .get()
+                        .getKey());
     }
 
     public static void task21() {
-        System.out.println("Task 21: ");
+        System.out.println("\nTask 21: ");
         List<Student> students = Util.getStudents();
 
         System.out.println("Students amount in groups");
@@ -310,7 +343,7 @@ public class Main {
     }
 
     public static void task22() {
-        System.out.println("Task 22: ");
+        System.out.println("\nTask 22: ");
         List<Student> students = Util.getStudents();
 
         System.out.println("Group and MinAge:");
