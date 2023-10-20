@@ -24,33 +24,32 @@ import java.util.stream.Stream;
 public class Main {
 
     public static void main(String[] args) {
-//        System.out.println(task1());
-//        System.out.println(task2());
-//        System.out.println(task3());
-//        System.out.println("Animal count: " + task4());
-//        System.out.println("Is anyone from 'Hungarian': " + task5());
-//        System.out.println("There is other genders (no 'Male' or 'Female'): " + task6());
-//        System.out.println("No one from Oceania: " + task7());
-//        System.out.println("The oldest animal in sorted top 100: " + task8());
-//        System.out.println("The shortest animal bread: " + task9());
-//        System.out.println("All animals sum age: " + task10());
-//        System.out.println("Indonesian animals average age: " + task11());
-//        System.out.println("Students whom can go to academy(limit 200): " + task12());
-//        System.out.println("First 500 evacuation people: " + task13());
-//        task14();
-//        task15();
-//        task16();
-//        task17();
-
-//        task18();
-//        task19();
+        System.out.println("Yang animals(10..20) sorted by age in 3d zoo: " + task1());
+        System.out.println("Animals from Japanese (female in upper case): " + task2());
+        System.out.println("Animals older than 30, distinct, origin start with 'A': " + task3());
+        System.out.println("Animal count: " + task4());
+        System.out.println("Is anyone from 'Hungarian': " + task5());
+        System.out.println("There is other genders (no 'Male' or 'Female'): " + task6());
+        System.out.println("No one from Oceania: " + task7());
+        System.out.println("The oldest animal in sorted top 100: " + task8());
+        System.out.println("The shortest animal bread: " + task9());
+        System.out.println("All animals sum age: " + task10());
+        System.out.println("Indonesian animals average age: " + task11());
+        System.out.println("Students whom can go to academy(limit 200): " + task12());
+        System.out.println("First 500 evacuation people: " + task13());
+        task14();
+        task15();
+        task16();
+        task17();
+        task18();
+        task19();
         task20();
-//        task21();
-//        task22();
+        task21();
+        task22();
     }
 
     public static List<Animal> task1() {
-        System.out.println("Task 1: ");
+        System.out.println("\nTask 1: ");
         List<Animal> animals = Util.getAnimals();
 
         AtomicInteger counter = new AtomicInteger();
@@ -62,7 +61,7 @@ public class Main {
     }
 
     public static List<String> task2() {
-        System.out.println("Task 2: ");
+        System.out.println("\nTask 2: ");
         List<Animal> animals = Util.getAnimals();
 
         final String JAPANESE = "Japanese";
@@ -77,7 +76,7 @@ public class Main {
     }
 
     public static List<String> task3() {
-        System.out.println("Task 3: ");
+        System.out.println("\nTask 3: ");
         List<Animal> animals = Util.getAnimals();
 
         return animals.stream()
@@ -89,7 +88,7 @@ public class Main {
     }
 
     public static long task4() {
-        System.out.println("Task 4: ");
+        System.out.println("\nTask 4: ");
         List<Animal> animals = Util.getAnimals();
 
         final String FEMALE = "Female";
@@ -99,7 +98,7 @@ public class Main {
     }
 
     public static boolean task5() {
-        System.out.println("Task 5: ");
+        System.out.println("\nTask 5: ");
         List<Animal> animals = Util.getAnimals();
 
         final String HUNGARIAN = "Hungarian";
@@ -109,7 +108,7 @@ public class Main {
     }
 
     public static boolean task6() {
-        System.out.println("Task 6: ");
+        System.out.println("\nTask 6: ");
         List<Animal> animals = Util.getAnimals();
 
         final String FEMALE = "Female";
@@ -119,7 +118,7 @@ public class Main {
     }
 
     public static boolean task7() {
-        System.out.println("Task 7: ");
+        System.out.println("\nTask 7: ");
         List<Animal> animals = Util.getAnimals();
 
         final String OCEANIA = "Oceania";
@@ -128,7 +127,7 @@ public class Main {
     }
 
     public static int task8() {
-        System.out.println("Task 8: ");
+        System.out.println("\nTask 8: ");
         List<Animal> animals = Util.getAnimals();
 
         try {
@@ -145,7 +144,7 @@ public class Main {
     }
 
     public static int task9() {
-        System.out.println("Task 9: ");
+        System.out.println("\nTask 9: ");
         List<Animal> animals = Util.getAnimals();
 
         try {
@@ -162,7 +161,7 @@ public class Main {
     }
 
     public static long task10() {
-        System.out.println("Task 10: ");
+        System.out.println("\nTask 10: ");
         List<Animal> animals = Util.getAnimals();
 
         return animals.stream()
@@ -171,7 +170,7 @@ public class Main {
     }
 
     public static double task11() {
-        System.out.println("Task 11: ");
+        System.out.println("\nTask 11: ");
         List<Animal> animals = Util.getAnimals();
 
         final String INDONESIAN = "Indonesian";
@@ -182,7 +181,7 @@ public class Main {
     }
 
     public static List<Person> task12() {
-        System.out.println("Task 12: ");
+        System.out.println("\nTask 12: ");
         List<Person> persons = Util.getPersons();
 
         final String MALE = "Male";
@@ -197,7 +196,7 @@ public class Main {
     }
 
     public static List<Person> task13() {
-        System.out.println("Task 13: ");
+        System.out.println("\nTask 13: ");
         List<House> houses = Util.getHouses();
 
         final String HOSPITAL = "Hospital";
@@ -228,13 +227,15 @@ public class Main {
     }
 
     public static void task15() {
-        System.out.println("Task 15: ");
+        System.out.println("\nTask 15: ");
         List<Flower> flowers = Util.getFlowers();
 
         final double WATER_SERVICE_FOR_5_YEARS = 1.39 * 0.001 * 365 * 5;
-        final String GLASS = "Glass", ALUMINUM = "Aluminum", STEEL = "Steel";
+        final String GLASS = "Glass";
+        final String ALUMINUM = "Aluminum";
+        final String STEEL = "Steel";
 
-        System.out.println("Total cost of maintaining all plants: " +
+        System.out.printf("Total cost of maintaining all plants: %.2f $\n",
             flowers.stream()
                 .sorted(Comparator.comparing(Flower::getOrigin).reversed())
                 .sorted(Comparator.comparing(Flower::getPrice).thenComparing(Flower::getWaterConsumptionPerDay).reversed())
