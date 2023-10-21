@@ -19,53 +19,130 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import static by.clevertec.util.Const.ALUMINUM;
+import static by.clevertec.util.Const.BMW;
+import static by.clevertec.util.Const.Black;
+import static by.clevertec.util.Const.Blue;
+import static by.clevertec.util.Const.CHILDREN_AGE;
+import static by.clevertec.util.Const.CONSCRIPT_AGE;
+import static by.clevertec.util.Const.COST_KILOGRAM;
+import static by.clevertec.util.Const.Cherokee;
+import static by.clevertec.util.Const.Chrysler;
+import static by.clevertec.util.Const.Civic;
+import static by.clevertec.util.Const.Dodge;
+import static by.clevertec.util.Const.FEMALE;
+import static by.clevertec.util.Const.FEMALE_RETIREE_AGE;
+import static by.clevertec.util.Const.GLASS;
+import static by.clevertec.util.Const.GMC;
+import static by.clevertec.util.Const.Green;
+import static by.clevertec.util.Const.HOSPITAL;
+import static by.clevertec.util.Const.HUNGARIAN;
+import static by.clevertec.util.Const.INDONESIAN;
+import static by.clevertec.util.Const.JAGUAR;
+import static by.clevertec.util.Const.JAPANESE;
+import static by.clevertec.util.Const.LEXUS;
+import static by.clevertec.util.Const.MALE;
+import static by.clevertec.util.Const.MALE_RETIREE_AGE;
+import static by.clevertec.util.Const.MAX_COST;
+import static by.clevertec.util.Const.MAX_MASS;
+import static by.clevertec.util.Const.MAX_YEAR;
+import static by.clevertec.util.Const.MIN_MASS;
+import static by.clevertec.util.Const.OCEANIA;
+import static by.clevertec.util.Const.Red;
+import static by.clevertec.util.Const.STEEL;
+import static by.clevertec.util.Const.Toyota;
+import static by.clevertec.util.Const.VIN_59;
+import static by.clevertec.util.Const.WHITE;
+import static by.clevertec.util.Const.Yellow;
 
 public class Main {
 
     public static void main(String[] args) {
+        System.out.println("\nTask 1: ");
         System.out.println("Yang animals(10..20) sorted by age in 3d zoo: " + task1());
+
+        System.out.println("\nTask 2: ");
         System.out.println("Animals from Japanese (female in upper case): " + task2());
+
+        System.out.println("\nTask 3: ");
         System.out.println("Animals older than 30, distinct, origin start with 'A': " + task3());
+
+        System.out.println("\nTask 4: ");
         System.out.println("Animal count: " + task4());
+
+        System.out.println("\nTask 5: ");
         System.out.println("Is anyone from 'Hungarian': " + task5());
+
+        System.out.println("\nTask 6: ");
         System.out.println("There is other genders (no 'Male' or 'Female'): " + task6());
+
+        System.out.println("\nTask 7: ");
         System.out.println("No one from Oceania: " + task7());
+
+        System.out.println("\nTask 8: ");
         System.out.println("The oldest animal in sorted top 100: " + task8());
+
+        System.out.println("\nTask 9: ");
         System.out.println("The shortest animal bread: " + task9());
+
+        System.out.println("\nTask 10: ");
         System.out.println("All animals sum age: " + task10());
+
+        System.out.println("\nTask 11: ");
         System.out.println("Indonesian animals average age: " + task11());
+
+        System.out.println("\nTask 12: ");
         System.out.println("Students whom can go to academy(limit 200): " + task12());
+
+        System.out.println("\nTask 13: ");
         System.out.println("First 500 evacuation people: " + task13());
+
+        System.out.println("\nTask 14: ");
         task14();
+
+        System.out.println("\nTask 15: ");
         task15();
+
+        System.out.println("\nTask 16: ");
         task16();
+
+        System.out.println("\nTask 17: ");
         task17();
+
+        System.out.println("\nTask 18: ");
         task18();
+
+        System.out.println("\nTask 19: ");
         task19();
-        task20();
+
+        System.out.println("\nTask 20: ");
+        System.out.println("Faculty with max average assessment in exam1: " + task20(Util.getStudents(), Util.getExaminations()));
+
+        System.out.println("\nTask 21: ");
         task21();
+
+        System.out.println("\nTask 22: ");
         task22();
     }
 
     public static List<Animal> task1() {
-        System.out.println("\nTask 1: ");
         List<Animal> animals = Util.getAnimals();
 
+        final int MIN_AGE = 10;
+        final int MAX_AGE = 20;
+        final int GROUP_COUNT = 7;
         AtomicInteger counter = new AtomicInteger();
+
         return animals.stream()
-                .filter(a -> a.getAge() >= 10 && a.getAge() < 20)
+                .filter(a -> a.getAge() >= MIN_AGE && a.getAge() < MAX_AGE)
                 .sorted(Comparator.comparing(Animal::getAge))
-                .collect(Collectors.groupingBy(it -> counter.getAndIncrement() / 7))
+                .collect(Collectors.groupingBy(it -> counter.getAndIncrement() / GROUP_COUNT))
                 .get(2);
     }
 
     public static List<String> task2() {
-        System.out.println("\nTask 2: ");
         List<Animal> animals = Util.getAnimals();
-
-        final String JAPANESE = "Japanese";
-        final String FEMALE = "Female";
 
         return animals.stream()
                 .filter(a -> JAPANESE.equals(a.getOrigin()))
@@ -76,58 +153,54 @@ public class Main {
     }
 
     public static List<String> task3() {
-        System.out.println("\nTask 3: ");
         List<Animal> animals = Util.getAnimals();
 
+        final String START_SIM = "A";
+        final int PREF_AGE = 30;
+
         return animals.stream()
-                .filter(a -> a.getAge() > 30)
+                .filter(a -> a.getAge() > PREF_AGE)
                 .map(Animal::getOrigin)
                 .distinct()
-                .filter(o -> o.startsWith("A"))
+                .filter(o -> o.startsWith(START_SIM))
                 .collect(Collectors.toList());
     }
 
     public static long task4() {
-        System.out.println("\nTask 4: ");
         List<Animal> animals = Util.getAnimals();
 
-        final String FEMALE = "Female";
         return animals.stream()
                 .filter(a -> FEMALE.equals(a.getGender()))
                 .count();
     }
 
     public static boolean task5() {
-        System.out.println("\nTask 5: ");
         List<Animal> animals = Util.getAnimals();
 
-        final String HUNGARIAN = "Hungarian";
+        final int MIN_AGE = 20;
+        final int MAX_AGE = 20;
+
         return animals.stream()
-                .filter(a -> a.getAge() >= 20 && a.getAge() <= 30)
+                .filter(a -> a.getAge() >= MIN_AGE && a.getAge() <= MAX_AGE)
                 .anyMatch(a -> HUNGARIAN.equals(a.getOrigin()));
     }
 
     public static boolean task6() {
-        System.out.println("\nTask 6: ");
         List<Animal> animals = Util.getAnimals();
 
-        final String FEMALE = "Female";
-        final String MALE = "Male";
+
         return animals.stream()
                 .anyMatch(a -> !FEMALE.equals(a.getGender()) && !MALE.equals(a.getGender()));
     }
 
     public static boolean task7() {
-        System.out.println("\nTask 7: ");
         List<Animal> animals = Util.getAnimals();
 
-        final String OCEANIA = "Oceania";
         return animals.stream()
                 .noneMatch(a -> OCEANIA.equals(a.getOrigin()));
     }
 
     public static int task8() {
-        System.out.println("\nTask 8: ");
         List<Animal> animals = Util.getAnimals();
 
         try {
@@ -144,7 +217,6 @@ public class Main {
     }
 
     public static int task9() {
-        System.out.println("\nTask 9: ");
         List<Animal> animals = Util.getAnimals();
 
         try {
@@ -161,7 +233,6 @@ public class Main {
     }
 
     public static long task10() {
-        System.out.println("\nTask 10: ");
         List<Animal> animals = Util.getAnimals();
 
         return animals.stream()
@@ -170,10 +241,9 @@ public class Main {
     }
 
     public static double task11() {
-        System.out.println("\nTask 11: ");
         List<Animal> animals = Util.getAnimals();
 
-        final String INDONESIAN = "Indonesian";
+
         return animals.stream()
                 .filter(a -> INDONESIAN.equals(a.getOrigin()))
                 .collect(Collectors.summarizingInt(Animal::getAge))
@@ -181,14 +251,12 @@ public class Main {
     }
 
     public static List<Person> task12() {
-        System.out.println("\nTask 12: ");
         List<Person> persons = Util.getPersons();
 
-        final String MALE = "Male";
         return persons.stream()
                 .filter(p -> MALE.equals(p.getGender())
-                        && p.getDateOfBirth().plusYears(18).isBefore(LocalDate.now())
-                        && p.getDateOfBirth().plusYears(27).isAfter(LocalDate.now())
+                        && p.getDateOfBirth().plusYears(CHILDREN_AGE).isBefore(LocalDate.now())
+                        && p.getDateOfBirth().plusYears(CONSCRIPT_AGE).isAfter(LocalDate.now())
                 )
                 .sorted(Comparator.comparing(Person::getRecruitmentGroup))
                 .limit(200)
@@ -196,15 +264,8 @@ public class Main {
     }
 
     public static List<Person> task13() {
-        System.out.println("\nTask 13: ");
         List<House> houses = Util.getHouses();
 
-        final String HOSPITAL = "Hospital";
-        final String FEMALE = "Female";
-        final String MALE = "Male";
-        final int CHILDREN_AGE = 18;
-        final int FEMALE_RETIREE_AGE = 58;
-        final int MALE_RETIREE_AGE = 63;
         final LocalDate NOW = LocalDate.now();
 
         return houses.stream()
@@ -223,35 +284,66 @@ public class Main {
 
     public static void task14() {
         List<Car> cars = Util.getCars();
-//        cars.stream() Продолжить ...
+
+        double sum =
+                cars.stream()
+                    .map(car -> Map.entry(
+                        JAGUAR.equals(car.getCarMake()) || WHITE.equals(car.getColor()) ? 1 :
+                               car.getMass() < MIN_MASS && (BMW.equals(car.getCarMake()) || LEXUS.equals(car.getCarMake()) ||
+                                       Chrysler.equals(car.getCarMake()) || Toyota.equals(car.getCarMake())) ? 2 :
+                                       (Black.equals(car.getColor()) && car.getMass() > MAX_MASS) ||
+                                               GMC.equals(car.getCarMake()) || Dodge.equals(car.getCarMake()) ? 3 :
+                                               car.getReleaseYear() < MAX_YEAR || Civic.equals(car.getCarModel()) ||
+                                                       Cherokee.equals(car.getCarModel()) ? 4 :
+                                                       !(Yellow.equals(car.getColor()) || Red.equals(car.getColor()) ||
+                                                               Green.equals(car.getColor()) || Blue.equals(car.getColor()))
+                                                               || car.getPrice() > MAX_COST ? 5 :
+                                                               car.getVin() != null && car.getVin().contains(VIN_59) ? 6 : 7
+                       , car))
+                        //  stream pairs <NumberOfGroup(1-7), Car>
+                        .filter(entry -> entry.getKey() < 7)
+                        .collect(Collectors.groupingBy(Map.Entry::getKey,
+                                Collectors.mapping(Map.Entry::getValue, Collectors.toList())))
+                        //  Map <NumberOfGroup(1-6), List<Car> >
+                        .entrySet().stream()
+                        .sorted(Map.Entry.comparingByKey())
+                        .map(Map.Entry::getValue)
+                        .map(carsIngroup -> Map.entry(carsIngroup,
+                                COST_KILOGRAM * carsIngroup.stream()
+                                        .collect(Collectors.summarizingInt(Car::getMass))
+                                        .getSum()))
+                        .peek(valueGroupCarCost -> System.out.printf("%.2f $\n", valueGroupCarCost.getValue()))
+
+                        .mapToDouble(groupCarCost -> groupCarCost.getKey().stream()
+                                .collect(Collectors.summarizingDouble(Car::getPrice))
+                                .getSum())
+                        .sum();
+
+        System.out.printf("Total company profit %.2f $\n", sum);
     }
 
     public static void task15() {
-        System.out.println("\nTask 15: ");
         List<Flower> flowers = Util.getFlowers();
 
         final double WATER_SERVICE_FOR_5_YEARS = 1.39 * 0.001 * 365 * 5;
-        final String GLASS = "Glass";
-        final String ALUMINUM = "Aluminum";
-        final String STEEL = "Steel";
+        final String PLANTS_NAMES_START_PATTERN = "^[C-S].*";
 
         System.out.printf("Total cost of maintaining all plants: %.2f $\n",
-            flowers.stream()
-                .sorted(Comparator.comparing(Flower::getOrigin).reversed())
-                .sorted(Comparator.comparing(Flower::getPrice).thenComparing(Flower::getWaterConsumptionPerDay).reversed())
-                .filter(flower -> Pattern.compile("^[C-S].*").matcher(flower.getCommonName()).matches())
-                .filter(Flower::isShadePreferred)
-                .peek(flower -> flower.getFlowerVaseMaterial()
-                        .stream()
-                        .filter(material -> GLASS.equals(material) || ALUMINUM.equals(material) || STEEL.equals(material))
-                        .collect(Collectors.toList()))
-                .map(flower -> flower.getPrice() + flower.getWaterConsumptionPerDay() * WATER_SERVICE_FOR_5_YEARS)
-                .mapToDouble(f -> f)
-                .sum());
+                flowers.stream()
+                        .sorted(Comparator.comparing(Flower::getOrigin).reversed())
+                        .sorted(Comparator.comparing(Flower::getPrice).thenComparing(Flower::getWaterConsumptionPerDay).reversed())
+                        .filter(flower -> Pattern.compile(PLANTS_NAMES_START_PATTERN).matcher(flower.getCommonName()).matches())
+                        .filter(Flower::isShadePreferred)
+                        .peek(flower -> flower.getFlowerVaseMaterial()
+                                .stream()
+                                .filter(material -> GLASS.equals(material) || ALUMINUM.equals(material) || STEEL.equals(material))
+                                .collect(Collectors.toList()))
+                        .map(flower -> flower.getPrice() + flower.getWaterConsumptionPerDay() * WATER_SERVICE_FOR_5_YEARS)
+                        .mapToDouble(f -> f)
+                        .sum());
     }
 
     public static void task16() {
-        System.out.println("\nTask 16: ");
         List<Student> students = Util.getStudents();
 
         final int CHILDREN_AGE = 18;
@@ -264,7 +356,6 @@ public class Main {
     }
 
     public static void task17() {
-        System.out.println("\nTask 17: ");
         List<Student> students = Util.getStudents();
 
         System.out.println("Unique groups:");
@@ -275,22 +366,20 @@ public class Main {
     }
 
     public static void task18() {
-        System.out.println("\nTask 18: ");
         List<Student> students = Util.getStudents();
 
-        System.out.println("Faculty - middle age:");
+        System.out.println("Faculty - average age:");
         students.stream()
                 .collect(Collectors.groupingBy(Student::getFaculty, Collectors.averagingDouble(Student::getAge)))
                 .forEach((faculty, avgAge) -> System.out.printf("%s : %.2f\n", faculty, avgAge));
     }
 
     public static void task19() {
-        System.out.println("\nTask 19: ");
         List<Student> students = Util.getStudents();
         List<Examination> examinations = Util.getExaminations();
 
         final int MARK = 4;
-        final String GROUP = "C-2";//[P-1, C-2, M-3, C-4, M-1, C-3, M-2, P-3, P-4, C-1, P-2]
+        final String GROUP = "C-2";
 
         System.out.println("Students from *group with exam3 > 4: ");
         examinations.stream()
@@ -305,36 +394,31 @@ public class Main {
                 .forEach(System.out::println);
     }
 
-    public static void task20() {
-        System.out.println("\nTask 20: ");
-        List<Student> students = Util.getStudents();
-        List<Examination> examinations = Util.getExaminations();
+    public static String task20(List<Student> students, List<Examination> examinations) {
 
-        System.out.println("The faculty with max assessment by exam1: " +
-                students.stream()
-                        .collect(Collectors.groupingBy(Student::getFaculty))
-                        .entrySet()
-                        .stream()
-                        .map(m -> Map.entry(m.getKey(), m.getValue()
-                                        .stream()
-                                        .map(s -> examinations.stream()
-                                                .filter(e -> e.getStudentId() == s.getId())
-                                                .map(Examination::getExam1)
-                                                .findAny()
-                                        )
-                                        .filter(Optional::isPresent)
-                                        .collect(Collectors.summarizingInt(Optional::get))
-                                        .getAverage()
-
+        return students.stream()
+                .collect(Collectors.groupingBy(Student::getFaculty))
+                .entrySet()
+                .stream()
+                .map(m -> Map.entry(m.getKey(), m.getValue()
+                                .stream()
+                                .map(s -> examinations.stream()
+                                        .filter(e -> e.getStudentId() == s.getId())
+                                        .map(Examination::getExam1)
+                                        .findAny()
                                 )
+                                .filter(Optional::isPresent)
+                                .collect(Collectors.summarizingInt(Optional::get))
+                                .getAverage()
+
                         )
-                        .max((a, b) -> (int) (a.getValue() - b.getValue()))
-                        .get()
-                        .getKey());
+                )
+                .max((a, b) -> (int) (a.getValue() - b.getValue()))
+                .get()
+                .getKey();
     }
 
     public static void task21() {
-        System.out.println("\nTask 21: ");
         List<Student> students = Util.getStudents();
 
         System.out.println("Students amount in groups");
@@ -344,7 +428,6 @@ public class Main {
     }
 
     public static void task22() {
-        System.out.println("\nTask 22: ");
         List<Student> students = Util.getStudents();
 
         System.out.println("Group and MinAge:");
