@@ -12,11 +12,13 @@ import by.clevertec.util.Util;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -188,7 +190,6 @@ public class Main {
     public static boolean task6() {
         List<Animal> animals = Util.getAnimals();
 
-
         return animals.stream()
                 .anyMatch(a -> !FEMALE.equals(a.getGender()) && !MALE.equals(a.getGender()));
     }
@@ -284,22 +285,30 @@ public class Main {
 
     public static void task14() {
         List<Car> cars = Util.getCars();
+        final Map<Integer, Predicate<Car>> GROUP_CAR = new LinkedHashMap<>() {
+            {
+                put(1, (car) -> JAGUAR.equals(car.getCarMake()) || WHITE.equals(car.getColor()));
+                put(2, (car) -> car.getMass() < MIN_MASS && (BMW.equals(car.getCarMake()) || LEXUS.equals(car.getCarMake()) ||
+                        Chrysler.equals(car.getCarMake()) || Toyota.equals(car.getCarMake())));
+                put(3, (car) -> (Black.equals(car.getColor()) && car.getMass() > MAX_MASS) ||
+                        GMC.equals(car.getCarMake()) || Dodge.equals(car.getCarMake()));
+                put(4, (car) -> car.getReleaseYear() < MAX_YEAR || Civic.equals(car.getCarModel()) ||
+                        Cherokee.equals(car.getCarModel()));
+                put(5, (car) -> !(Yellow.equals(car.getColor()) || Red.equals(car.getColor()) ||
+                        Green.equals(car.getColor()) || Blue.equals(car.getColor()))
+                        || car.getPrice() > MAX_COST);
+                put(6, (car) -> car.getVin() != null && car.getVin().contains(VIN_59));
+                put(7, (car) -> true);
+            }
+        };
 
         double sum =
                 cars.stream()
-                    .map(car -> Map.entry(
-                        JAGUAR.equals(car.getCarMake()) || WHITE.equals(car.getColor()) ? 1 :
-                               car.getMass() < MIN_MASS && (BMW.equals(car.getCarMake()) || LEXUS.equals(car.getCarMake()) ||
-                                       Chrysler.equals(car.getCarMake()) || Toyota.equals(car.getCarMake())) ? 2 :
-                                       (Black.equals(car.getColor()) && car.getMass() > MAX_MASS) ||
-                                               GMC.equals(car.getCarMake()) || Dodge.equals(car.getCarMake()) ? 3 :
-                                               car.getReleaseYear() < MAX_YEAR || Civic.equals(car.getCarModel()) ||
-                                                       Cherokee.equals(car.getCarModel()) ? 4 :
-                                                       !(Yellow.equals(car.getColor()) || Red.equals(car.getColor()) ||
-                                                               Green.equals(car.getColor()) || Blue.equals(car.getColor()))
-                                                               || car.getPrice() > MAX_COST ? 5 :
-                                                               car.getVin() != null && car.getVin().contains(VIN_59) ? 6 : 7
-                       , car))
+                        .map(car -> Map.entry(GROUP_CAR.entrySet().stream()
+                                .filter(entry -> entry.getValue().test(car))
+                                .findFirst()
+                                .map(Map.Entry::getKey)
+                                .get(), car))
                         //  stream pairs <NumberOfGroup(1-7), Car>
                         .filter(entry -> entry.getKey() < 7)
                         .collect(Collectors.groupingBy(Map.Entry::getKey,
@@ -328,16 +337,18 @@ public class Main {
         final double WATER_SERVICE_FOR_5_YEARS = 1.39 * 0.001 * 365 * 5;
         final String PLANTS_NAMES_START_PATTERN = "^[C-S].*";
 
+        final Predicate<Flower> FILTER =
+            (flower) -> flower.isShadePreferred() &&
+                flower.getFlowerVaseMaterial()
+                    .stream()
+                    .anyMatch(material -> GLASS.equals(material) || ALUMINUM.equals(material) || STEEL.equals(material));
+
         System.out.printf("Total cost of maintaining all plants: %.2f $\n",
                 flowers.stream()
                         .sorted(Comparator.comparing(Flower::getOrigin).reversed())
                         .sorted(Comparator.comparing(Flower::getPrice).thenComparing(Flower::getWaterConsumptionPerDay).reversed())
                         .filter(flower -> Pattern.compile(PLANTS_NAMES_START_PATTERN).matcher(flower.getCommonName()).matches())
-                        .filter(Flower::isShadePreferred)
-                        .peek(flower -> flower.getFlowerVaseMaterial()
-                                .stream()
-                                .filter(material -> GLASS.equals(material) || ALUMINUM.equals(material) || STEEL.equals(material))
-                                .collect(Collectors.toList()))
+                        .filter(FILTER)
                         .map(flower -> flower.getPrice() + flower.getWaterConsumptionPerDay() * WATER_SERVICE_FOR_5_YEARS)
                         .mapToDouble(f -> f)
                         .sum());
